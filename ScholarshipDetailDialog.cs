@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using scholarship;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class ScholarshipDetailDialog : Form
     {
@@ -29,6 +28,7 @@ namespace ScholarshipApp
             if (!Ui.Ask($"Apply to \"{_s.Name}\"?")) return;
             try
             {
+                // Calls your 2-argument method!
                 Db.SubmitApplication(Session.StudentId, _s.ScholarshipId);
                 Ui.Info("Application submitted. Await admin approval.");
                 Close();

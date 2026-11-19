@@ -1,4 +1,4 @@
-﻿namespace ScholarshipApp
+﻿namespace scholarship
 {
     partial class StudentDashboardForm
     {

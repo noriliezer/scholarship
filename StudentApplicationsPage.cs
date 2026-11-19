@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using scholarship;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class StudentApplicationsPage : Form
     {

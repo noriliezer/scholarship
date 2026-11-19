@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class RegisterForm : Form
     {

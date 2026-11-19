@@ -1,7 +1,10 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Drawing;
+using System.Globalization;
+using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class StudentsPage : UserControl
     {
@@ -65,11 +68,7 @@ namespace ScholarshipApp
             if (v == null) return;
 
             string error = Validate(v);
-            if (error != null)
-            {
-                Notify(error);
-                return;
-            }
+            if (error != null) { Notify(error); return; }
 
             try
             {
@@ -77,19 +76,12 @@ namespace ScholarshipApp
                     ("@id", v[0]), ("@n", v[1]), ("@c", Db.NullIfEmpty(v[2])), ("@y", v[3]), ("@e", Db.NullIfEmpty(v[4])));
                 LoadData();
             }
-            catch (SqlException ex)
-            {
-                Notify(Db.Friendly(ex));
-            }
+            catch (SqlException ex) { Notify(Db.Friendly(ex)); }
         }
 
         private void EditStudent()
         {
-            if (dgvStudents.CurrentRow == null)
-            {
-                Notify("Select a student first.");
-                return;
-            }
+            if (dgvStudents.CurrentRow == null) { Notify("Select a student first."); return; }
 
             var row = dgvStudents.CurrentRow;
             string id = Cell(row, 0);
@@ -106,11 +98,7 @@ namespace ScholarshipApp
 
             v[0] = id;
             string error = Validate(v);
-            if (error != null)
-            {
-                Notify(error);
-                return;
-            }
+            if (error != null) { Notify(error); return; }
 
             try
             {
@@ -118,42 +106,24 @@ namespace ScholarshipApp
                     ("@n", v[1]), ("@c", Db.NullIfEmpty(v[2])), ("@y", v[3]), ("@e", Db.NullIfEmpty(v[4])), ("@id", id));
                 LoadData();
             }
-            catch (SqlException ex)
-            {
-                Notify(Db.Friendly(ex));
-            }
+            catch (SqlException ex) { Notify(Db.Friendly(ex)); }
         }
 
         private void DeleteStudent()
         {
-            if (dgvStudents.CurrentRow == null)
-            {
-                Notify("Select a student first.");
-                return;
-            }
+            if (dgvStudents.CurrentRow == null) { Notify("Select a student first."); return; }
             string id = Cell(dgvStudents.CurrentRow, 0);
 
-            // 1. Warn the user that their applications will also be deleted
             if (MessageBox.Show($"Are you sure you want to delete student {id}?\n\nThis will also permanently delete all of their scholarship applications.",
-                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-            {
-                return;
-            }
+                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
             try
             {
-                // 2. Delete their applications FIRST (to satisfy the database foreign key)
                 Db.Execute("DELETE FROM applications WHERE student_id = @id", ("@id", id));
-
-                // 3. Then delete the student
                 Db.Execute("DELETE FROM students WHERE student_id = @id", ("@id", id));
-
                 LoadData();
             }
-            catch (SqlException ex)
-            {
-                Notify(Db.Friendly(ex));
-            }
+            catch (SqlException ex) { Notify(Db.Friendly(ex)); }
         }
 
         private static string Validate(string[] v)

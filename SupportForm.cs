@@ -1,4 +1,4 @@
-﻿namespace ScholarshipApp
+﻿namespace scholarship
 {
     public partial class SupportForm : Form
     {

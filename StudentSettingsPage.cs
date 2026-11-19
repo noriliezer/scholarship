@@ -1,28 +1,42 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using scholarship;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class StudentSettingsPage : Form
     {
         public StudentSettingsPage()
         {
-            InitializeComponent();
-        }
+            Text = "Settings";
+            Width = 500; Height = 320;
+            StartPosition = FormStartPosition.CenterParent;
+            BackColor = Color.White;
 
-        private void btnChangePassword_Click(object sender, EventArgs e) =>
-            new ChangePasswordDialog().ShowDialog(this);
+            Controls.Add(new Label { Text = "Settings", Font = Ui.TitleFont, Location = new Point(20, 18), AutoSize = true });
 
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            if (Ui.Ask("Log out?"))
+            var changePw = Ui.PrimaryButton("Change password");
+            changePw.Location = new Point(20, 70);
+            changePw.Click += (s, e) => new ChangePasswordDialog().ShowDialog(this);
+            Controls.Add(changePw);
+
+            var logout = Ui.GhostButton("Log out");
+            logout.Location = new Point(20, 120);
+            logout.Click += (s, e) =>
             {
-                Session.Clear();
-                Ui.Open(this, new LandingForm());
-            }
-        }
+                if (Ui.Ask("Log out?"))
+                {
+                    Session.Clear();
+                    Ui.Open(this, new LandingForm());
+                }
+            };
+            Controls.Add(logout);
 
-        private void btnClose_Click(object sender, EventArgs e) => Close();
+            var close = Ui.GhostButton("Close");
+            close.Location = new Point(20, 220);
+            close.Click += (s, e) => Close();
+            Controls.Add(close);
+        }
     }
 }

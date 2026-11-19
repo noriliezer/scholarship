@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Microsoft.Data.SqlClient;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class ScholarshipsPage : UserControl
     {

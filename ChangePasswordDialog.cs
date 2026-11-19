@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using scholarship;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public partial class ChangePasswordDialog : Form
     {

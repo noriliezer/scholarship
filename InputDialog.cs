@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace ScholarshipApp
+namespace scholarship
 {
     public class InputDialog : Form
     {

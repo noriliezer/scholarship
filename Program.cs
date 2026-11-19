@@ -1,4 +1,4 @@
-namespace ScholarshipApp
+namespace scholarship
 {
     internal static class Program
     {
