@@ -1,4 +1,4 @@
-﻿namespace scholarship
+﻿namespace ScholarshipApp
 {
     partial class StudentMessagesPage
     {

@@ -1,33 +1,41 @@
 ﻿using System;
 using System.Windows.Forms;
+using scholarship;
 
-namespace scholarship
+namespace ScholarshipApp
 {
     public partial class ScholarshipDetailDialog : Form
     {
-        private readonly Scholarship _s;
+        private readonly ScholarshipInfo _s;
 
-        public ScholarshipDetailDialog(Scholarship s)
+        public ScholarshipDetailDialog(ScholarshipInfo s)
         {
             _s = s;
             InitializeComponent();
             Text = s.Name;
             lblName.Text = s.Name;
-            lblMeta.Text = $"₱{s.Amount:N0}   •   {s.Category}   •   Deadline: {s.Deadline:yyyy-MM-dd}";
-            txtDescription.Text = s.Description ?? "(No description)";
+            lblMeta.Text = $"₱{s.Amount:N2}   •   Deadline: {s.Deadline:yyyy-MM-dd}   •   {s.Status}";
+            lblSlots.Text = $"Slots: {s.Slots} total — {s.Remaining} remaining";
 
             bool already = Db.HasApplied(Session.StudentId, s.ScholarshipId);
-            btnApply.Enabled = !already;
-            btnApply.Text = already ? "Already applied" : "Apply now";
+            btnApply.Enabled = !already && s.Remaining > 0 && s.Status == "Available";
+            btnApply.Text = already ? "Already applied"
+                          : s.Remaining <= 0 ? "No slots left"
+                          : "Apply now";
         }
 
         private void btnApply_Click(object sender, EventArgs e)
         {
-            using var dlg = new ApplyDialog(_s);
-            if (dlg.ShowDialog(this) == DialogResult.OK)
+            if (!Ui.Ask($"Apply to \"{_s.Name}\"?")) return;
+            try
             {
-                Ui.ShowInfo("Application submitted!");
+                Db.SubmitApplication(Session.StudentId, _s.ScholarshipId);
+                Ui.Info("Application submitted. Await admin approval.");
                 Close();
+            }
+            catch (Exception ex)
+            {
+                Ui.Error("Submission failed: " + ex.Message);
             }
         }
 

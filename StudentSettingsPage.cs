@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using ScholarshipApp;
+using scholarship;
 
-namespace scholarship
+namespace ScholarshipApp
 {
     public partial class StudentSettingsPage : Form
     {
@@ -16,11 +16,10 @@ namespace scholarship
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            if (Ui.Confirm("Log out?"))
+            if (Ui.Ask("Log out?"))
             {
                 Session.Clear();
-                new LandingForm().Show();
-                Close();
+                Ui.Open(this, new LandingForm());
             }
         }
 

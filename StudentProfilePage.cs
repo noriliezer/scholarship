@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using scholarship;
 
-namespace scholarship
+namespace ScholarshipApp
 {
     public partial class StudentProfilePage : Form
     {
-        private Student _s;
+        private StudentInfo _s;
 
         public StudentProfilePage()
         {
@@ -18,19 +18,13 @@ namespace scholarship
             txtEmail.Text = _s.Email;
             txtCourse.Text = _s.Course;
             txtYear.Text = _s.YearLevel;
-            txtGpa.Text = _s.Gpa.ToString("0.00");
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtEmail.Text))
+            if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                Ui.ShowError("Name and Email are required.");
-                return;
-            }
-            if (!double.TryParse(txtGpa.Text, out var gpa))
-            {
-                Ui.ShowError("GPA must be a number.");
+                Ui.Error("Full name is required.");
                 return;
             }
 
@@ -38,11 +32,17 @@ namespace scholarship
             _s.Email = txtEmail.Text.Trim();
             _s.Course = txtCourse.Text.Trim();
             _s.YearLevel = txtYear.Text.Trim();
-            _s.Gpa = gpa;
 
-            Db.UpdateStudentProfile(_s);
-            Session.FullName = _s.FullName;
-            Ui.ShowInfo("Profile updated.");
+            try
+            {
+                Db.UpdateStudentProfile(_s);
+                Session.StudentName = _s.FullName;
+                Ui.Info("Profile updated.");
+            }
+            catch (Exception ex)
+            {
+                Ui.Error("Could not update profile: " + ex.Message);
+            }
         }
 
         private void btnChangePassword_Click(object sender, EventArgs e) =>

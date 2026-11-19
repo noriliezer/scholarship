@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ScholarshipApp;
+using scholarship;
 
-namespace scholarship
+namespace ScholarshipApp
 {
     public partial class StudentDashboardForm : Form
     {
@@ -17,18 +17,11 @@ namespace scholarship
 
         private void WireEvents()
         {
-            navDashboard.MouseEnter += HoverOn;
-            navDashboard.MouseLeave += HoverOff;
-            navBrowse.MouseEnter += HoverOn;
-            navBrowse.MouseLeave += HoverOff;
-            navApplications.MouseEnter += HoverOn;
-            navApplications.MouseLeave += HoverOff;
-            navMessages.MouseEnter += HoverOn;
-            navMessages.MouseLeave += HoverOff;
-            navProfile.MouseEnter += HoverOn;
-            navProfile.MouseLeave += HoverOff;
-            navSettings.MouseEnter += HoverOn;
-            navSettings.MouseLeave += HoverOff;
+            navBrowse.MouseEnter += HoverOn; navBrowse.MouseLeave += HoverOff;
+            navApplications.MouseEnter += HoverOn; navApplications.MouseLeave += HoverOff;
+            navMessages.MouseEnter += HoverOn; navMessages.MouseLeave += HoverOff;
+            navProfile.MouseEnter += HoverOn; navProfile.MouseLeave += HoverOff;
+            navSettings.MouseEnter += HoverOn; navSettings.MouseLeave += HoverOff;
 
             navBrowse.Click += (s, e) => new BrowseScholarshipsPage().ShowDialog(this);
             navApplications.Click += (s, e) => new StudentApplicationsPage().ShowDialog(this);
@@ -42,47 +35,38 @@ namespace scholarship
 
         private void LoadDashboard()
         {
-            lblWelcome.Text = $"Welcome back, {Session.FullName}!";
+            lblWelcome.Text = $"Welcome back, {Session.StudentName}!";
 
-            var (open, mine, approved) = Db.GetStudentDashboardStats(Session.StudentId);
-
-            cardsPanel.Controls.Clear();
-            cardsPanel.Controls.Add(Ui.SummaryCard("Open Scholarships", open.ToString(), Ui.Primary));
-            cardsPanel.Controls.Add(Ui.SummaryCard("My Applications", mine.ToString(), Ui.Warning));
-            cardsPanel.Controls.Add(Ui.SummaryCard("Approved", approved.ToString(), Ui.Success));
-
-            lstDeadlines.Items.Clear();
-            foreach (var s in Db.GetOpenScholarships().Take(6))
-                lstDeadlines.Items.Add($"{s.Deadline:yyyy-MM-dd}  —  {s.Name}  (₱{s.Amount:N0})");
-
-            lstUpdates.Items.Clear();
-            foreach (var m in Db.GetMessagesByStudent(Session.StudentId).Take(6))
-                lstUpdates.Items.Add((m.IsRead ? "○ " : "● ") + m.Title);
-
-            recommendedPanel.Controls.Clear();
-            foreach (var s in Db.GetOpenScholarships().Take(6))
-                recommendedPanel.Controls.Add(MakeCard(s));
-        }
-
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            if (Ui.Confirm("Log out?"))
+            try
             {
-                Session.Clear();
-                new LandingForm().Show();
-                Close();
+                var (open, mine, accepted) = Db.GetStudentDashboardStats(Session.StudentId);
+
+                cardsPanel.Controls.Clear();
+                cardsPanel.Controls.Add(Ui.Card("Open Scholarships", open.ToString(), Ui.StudentPrimary));
+                cardsPanel.Controls.Add(Ui.Card("My Applications", mine.ToString(), Ui.StudentWarning));
+                cardsPanel.Controls.Add(Ui.Card("Accepted", accepted.ToString(), Ui.StudentSuccess));
+
+                lstDeadlines.Items.Clear();
+                foreach (var s in Db.GetAvailableScholarships().Take(6))
+                    lstDeadlines.Items.Add($"{s.Deadline:yyyy-MM-dd}  —  {s.Name}  ({s.Remaining} slots left)");
+
+                lstUpdates.Items.Clear();
+                foreach (var m in Db.GetMessagesByStudent(Session.StudentId).Take(6))
+                    lstUpdates.Items.Add((m.IsRead ? "○ " : "● ") + m.Title);
+
+                recommendedPanel.Controls.Clear();
+                foreach (var s in Db.GetAvailableScholarships().Take(6))
+                    recommendedPanel.Controls.Add(MakeCard(s));
+            }
+            catch (Exception ex)
+            {
+                Ui.Error("Could not load dashboard: " + ex.Message);
             }
         }
 
-        private Panel MakeCard(Scholarship s)
+        private Panel MakeCard(ScholarshipInfo s)
         {
-            var p = new Panel
-            {
-                BackColor = Color.White,
-                Cursor = Cursors.Hand,
-                Margin = new Padding(8),
-                Size = new Size(270, 130)
-            };
+            var p = new Panel { BackColor = Color.White, Cursor = Cursors.Hand, Margin = new Padding(8), Size = new Size(270, 130) };
             p.Paint += (o, e) =>
                 e.Graphics.DrawRectangle(new Pen(Color.FromArgb(225, 225, 225)), 0, 0, p.Width - 1, p.Height - 1);
 
@@ -95,7 +79,7 @@ namespace scholarship
             });
             p.Controls.Add(new Label
             {
-                Text = $"₱{s.Amount:N0}  •  {s.Category}",
+                Text = $"₱{s.Amount:N2}  •  {s.Remaining} slots left",
                 ForeColor = Color.Gray,
                 Location = new Point(12, 58),
                 AutoSize = true
@@ -103,12 +87,12 @@ namespace scholarship
             p.Controls.Add(new Label
             {
                 Text = $"Deadline: {s.Deadline:yyyy-MM-dd}",
-                ForeColor = Ui.Danger,
+                ForeColor = Ui.StudentDanger,
                 Location = new Point(12, 78),
                 AutoSize = true
             });
 
-            var view = Ui.PrimaryButton("View");
+            var view = Ui.PrimaryBtn("View");
             view.Size = new Size(100, 28);
             view.Location = new Point(12, 98);
             view.Click += (o, e) => new ScholarshipDetailDialog(s).ShowDialog(this);
@@ -116,6 +100,15 @@ namespace scholarship
 
             p.DoubleClick += (o, e) => new ScholarshipDetailDialog(s).ShowDialog(this);
             return p;
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            if (Ui.Ask("Log out?"))
+            {
+                Session.Clear();
+                Ui.Open(this, new LandingForm());
+            }
         }
     }
 }

@@ -1,72 +1,81 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using scholarship;
 
-namespace scholarship
+namespace ScholarshipApp
 {
     public partial class StudentApplicationsPage : Form
     {
         public StudentApplicationsPage()
         {
             InitializeComponent();
-            LoadApplications();
+            LoadApps();
         }
 
-        private void LoadApplications()
+        private void LoadApps()
         {
-            dgvApplications.Rows.Clear();
-            var apps = Db.GetApplicationsByStudent(Session.StudentId);
-            foreach (var a in apps)
+            dgvApps.Rows.Clear();
+            try
             {
-                var idx = dgvApplications.Rows.Add(
-                    "A-" + a.ApplicationId,
-                    a.ScholarshipName,
-                    a.AppliedAt.ToString("yyyy-MM-dd"),
-                    a.Status,
-                    a.Status == "Pending" ? "Withdraw" : "View");
-                dgvApplications.Rows[idx].Tag = a;
+                var apps = Db.GetApplicationsByStudent(Session.StudentId);
+                foreach (var a in apps)
+                {
+                    int idx = dgvApps.Rows.Add(
+                        "A-" + a.ApplicationId,
+                        a.ScholarshipName,
+                        a.DateApplied.ToString("yyyy-MM-dd"),
+                        a.Status);
+                    dgvApps.Rows[idx].Tag = a;
+                }
+                if (apps.Count == 0)
+                    dgvApps.Rows.Add("—", "No applications yet.", "", "");
             }
-            if (apps.Count == 0)
-                dgvApplications.Rows.Add("—", "No applications yet.", "", "", "");
+            catch (Exception ex)
+            {
+                Ui.Error("Could not load applications: " + ex.Message);
+            }
         }
 
-        private void dgvApplications_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void dgvApps_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.ColumnIndex != 3 || e.Value == null) return;
-            var status = e.Value.ToString();
+            var s = e.Value.ToString();
             e.CellStyle.Font = new Font("Segoe UI Semibold", 9.5f);
-            switch (status)
+            switch (s)
             {
-                case "Pending": e.CellStyle.ForeColor = Ui.Warning; break;
-                case "Approved": e.CellStyle.ForeColor = Ui.Success; break;
-                case "Rejected": e.CellStyle.ForeColor = Ui.Danger; break;
+                case "Pending": e.CellStyle.ForeColor = Ui.StudentWarning; break;
+                case "Accepted": e.CellStyle.ForeColor = Ui.StudentSuccess; break;
+                case "Rejected": e.CellStyle.ForeColor = Ui.StudentDanger; break;
                 case "Withdrawn": e.CellStyle.ForeColor = Color.Gray; break;
             }
         }
 
-        private void dgvApplications_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvApps_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex != 4) return;
-            var app = dgvApplications.Rows[e.RowIndex].Tag as Application;
-            if (app == null) return;
+            if (e.RowIndex < 0) return;
+            var a = dgvApps.Rows[e.RowIndex].Tag as StudentApplication;
+            if (a == null) return;
 
-            if (app.Status == "Pending")
+            if (a.Status == "Pending")
             {
-                if (Ui.Confirm($"Withdraw application for \"{app.ScholarshipName}\"?"))
+                if (Ui.Ask($"Withdraw application for \"{a.ScholarshipName}\"?"))
                 {
-                    Db.WithdrawApplication(app.ApplicationId);
-                    LoadApplications();
+                    try
+                    {
+                        Db.WithdrawApplication(a.ApplicationId, Session.StudentId);
+                        LoadApps();
+                    }
+                    catch (Exception ex) { Ui.Error(ex.Message); }
                 }
             }
             else
             {
-                Ui.ShowInfo(
-                    $"Application: A-{app.ApplicationId}\n" +
-                    $"Scholarship: {app.ScholarshipName}\n" +
-                    $"Status:      {app.Status}\n" +
-                    $"Applied:     {app.AppliedAt:yyyy-MM-dd}\n\n" +
-                    $"Essay:\n{(string.IsNullOrEmpty(app.Essay) ? "(none)" : app.Essay)}\n\n" +
-                    $"Admin comment:\n{(string.IsNullOrEmpty(app.AdminComment) ? "(none)" : app.AdminComment)}");
+                Ui.Info(
+                    $"Application: A-{a.ApplicationId}\n" +
+                    $"Scholarship: {a.ScholarshipName}\n" +
+                    $"Status: {a.Status}\n" +
+                    $"Applied: {a.DateApplied:yyyy-MM-dd}");
             }
         }
     }

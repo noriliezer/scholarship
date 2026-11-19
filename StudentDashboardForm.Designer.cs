@@ -1,14 +1,12 @@
-﻿namespace scholarship
+﻿namespace ScholarshipApp
 {
     partial class StudentDashboardForm
     {
         private System.ComponentModel.IContainer components = null;
 
-        // Sidebar
-        private System.Windows.Forms.Panel sidebarPanel;
+        private System.Windows.Forms.Panel sidebar;
         private System.Windows.Forms.Label lblBrand;
         private System.Windows.Forms.Label lblSubBrand;
-        private System.Windows.Forms.Label navDashboard;
         private System.Windows.Forms.Label navBrowse;
         private System.Windows.Forms.Label navApplications;
         private System.Windows.Forms.Label navMessages;
@@ -16,8 +14,7 @@
         private System.Windows.Forms.Label navSettings;
         private System.Windows.Forms.Button btnLogout;
 
-        // Main
-        private System.Windows.Forms.Panel mainPanel;
+        private System.Windows.Forms.Panel main;
         private System.Windows.Forms.Label lblWelcome;
         private System.Windows.Forms.FlowLayoutPanel cardsPanel;
         private System.Windows.Forms.Label lblDeadlinesTitle;
@@ -29,8 +26,7 @@
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-                components.Dispose();
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -38,17 +34,16 @@
         {
             this.components = new System.ComponentModel.Container();
 
-            this.sidebarPanel = new System.Windows.Forms.Panel();
+            this.sidebar = new System.Windows.Forms.Panel();
             this.lblBrand = new System.Windows.Forms.Label();
             this.lblSubBrand = new System.Windows.Forms.Label();
-            this.navDashboard = new System.Windows.Forms.Label();
             this.navBrowse = new System.Windows.Forms.Label();
             this.navApplications = new System.Windows.Forms.Label();
             this.navMessages = new System.Windows.Forms.Label();
             this.navProfile = new System.Windows.Forms.Label();
             this.navSettings = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
-            this.mainPanel = new System.Windows.Forms.Panel();
+            this.main = new System.Windows.Forms.Panel();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.cardsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.lblDeadlinesTitle = new System.Windows.Forms.Label();
@@ -58,20 +53,19 @@
             this.lblRecommendedTitle = new System.Windows.Forms.Label();
             this.recommendedPanel = new System.Windows.Forms.FlowLayoutPanel();
 
-            // ---------- Sidebar ----------
-            this.sidebarPanel.BackColor = System.Drawing.Color.FromArgb(33, 37, 41);
-            this.sidebarPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.sidebarPanel.Width = 220;
-            this.sidebarPanel.Name = "sidebarPanel";
-            this.sidebarPanel.Controls.Add(this.lblBrand);
-            this.sidebarPanel.Controls.Add(this.lblSubBrand);
-            this.sidebarPanel.Controls.Add(this.navDashboard);
-            this.sidebarPanel.Controls.Add(this.navBrowse);
-            this.sidebarPanel.Controls.Add(this.navApplications);
-            this.sidebarPanel.Controls.Add(this.navMessages);
-            this.sidebarPanel.Controls.Add(this.navProfile);
-            this.sidebarPanel.Controls.Add(this.navSettings);
-            this.sidebarPanel.Controls.Add(this.btnLogout);
+            // Sidebar
+            this.sidebar.BackColor = System.Drawing.Color.FromArgb(33, 37, 41);
+            this.sidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.sidebar.Width = 220;
+            this.sidebar.Name = "sidebar";
+            this.sidebar.Controls.Add(this.lblBrand);
+            this.sidebar.Controls.Add(this.lblSubBrand);
+            this.sidebar.Controls.Add(this.navBrowse);
+            this.sidebar.Controls.Add(this.navApplications);
+            this.sidebar.Controls.Add(this.navMessages);
+            this.sidebar.Controls.Add(this.navProfile);
+            this.sidebar.Controls.Add(this.navSettings);
+            this.sidebar.Controls.Add(this.btnLogout);
 
             this.lblBrand.AutoSize = true;
             this.lblBrand.Font = new System.Drawing.Font("Segoe UI Semibold", 14F);
@@ -85,12 +79,11 @@
             this.lblSubBrand.Location = new System.Drawing.Point(22, 48);
             this.lblSubBrand.Text = "STUDENT PORTAL";
 
-            ConfigureNav(this.navDashboard, "Dashboard", 100);
-            ConfigureNav(this.navBrowse, "Browse Scholarships", 142);
-            ConfigureNav(this.navApplications, "My Applications", 184);
-            ConfigureNav(this.navMessages, "Messages", 226);
-            ConfigureNav(this.navProfile, "My Profile", 268);
-            ConfigureNav(this.navSettings, "Settings", 310);
+            ConfigureNav(this.navBrowse, "Browse Scholarships", 100);
+            ConfigureNav(this.navApplications, "My Applications", 142);
+            ConfigureNav(this.navMessages, "Messages", 184);
+            ConfigureNav(this.navProfile, "My Profile", 226);
+            ConfigureNav(this.navSettings, "Settings", 268);
 
             this.btnLogout.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             this.btnLogout.BackColor = System.Drawing.Color.FromArgb(33, 37, 41);
@@ -100,26 +93,26 @@
             this.btnLogout.Size = new System.Drawing.Size(190, 36);
             this.btnLogout.Text = "Log out";
             this.btnLogout.UseVisualStyleBackColor = false;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             this.btnLogout.FlatAppearance.BorderSize = 0;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
 
-            // ---------- Main ----------
-            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainPanel.Padding = new System.Windows.Forms.Padding(20);
-            this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Controls.Add(this.lblWelcome);
-            this.mainPanel.Controls.Add(this.cardsPanel);
-            this.mainPanel.Controls.Add(this.lblDeadlinesTitle);
-            this.mainPanel.Controls.Add(this.lstDeadlines);
-            this.mainPanel.Controls.Add(this.lblUpdatesTitle);
-            this.mainPanel.Controls.Add(this.lstUpdates);
-            this.mainPanel.Controls.Add(this.lblRecommendedTitle);
-            this.mainPanel.Controls.Add(this.recommendedPanel);
+            // Main
+            this.main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.main.Padding = new System.Windows.Forms.Padding(20);
+            this.main.Name = "main";
+            this.main.Controls.Add(this.lblWelcome);
+            this.main.Controls.Add(this.cardsPanel);
+            this.main.Controls.Add(this.lblDeadlinesTitle);
+            this.main.Controls.Add(this.lstDeadlines);
+            this.main.Controls.Add(this.lblUpdatesTitle);
+            this.main.Controls.Add(this.lstUpdates);
+            this.main.Controls.Add(this.lblRecommendedTitle);
+            this.main.Controls.Add(this.recommendedPanel);
 
             this.lblWelcome.AutoSize = true;
             this.lblWelcome.Font = new System.Drawing.Font("Segoe UI Semibold", 15F);
             this.lblWelcome.Location = new System.Drawing.Point(20, 20);
-            this.lblWelcome.Text = "Welcome back!";
+            this.lblWelcome.Text = "Welcome!";
 
             this.cardsPanel.AutoSize = true;
             this.cardsPanel.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
@@ -159,7 +152,7 @@
             this.recommendedPanel.WrapContents = true;
             this.recommendedPanel.Name = "recommendedPanel";
 
-            // ---------- Form ----------
+            // Form
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(245, 246, 250);
@@ -168,8 +161,8 @@
             this.Name = "StudentDashboardForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Scholarship Portal — Student";
-            this.Controls.Add(this.mainPanel);
-            this.Controls.Add(this.sidebarPanel);
+            this.Controls.Add(this.main);
+            this.Controls.Add(this.sidebar);
         }
 
         private void ConfigureNav(System.Windows.Forms.Label lbl, string text, int y)

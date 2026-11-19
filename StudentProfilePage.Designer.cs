@@ -1,4 +1,4 @@
-﻿namespace scholarship
+﻿namespace ScholarshipApp
 {
     partial class StudentProfilePage
     {
@@ -12,8 +12,6 @@
         private System.Windows.Forms.TextBox txtCourse;
         private System.Windows.Forms.Label lblYear;
         private System.Windows.Forms.TextBox txtYear;
-        private System.Windows.Forms.Label lblGpa;
-        private System.Windows.Forms.TextBox txtGpa;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnChangePassword;
 
@@ -35,8 +33,6 @@
             this.txtCourse = new System.Windows.Forms.TextBox();
             this.lblYear = new System.Windows.Forms.Label();
             this.txtYear = new System.Windows.Forms.TextBox();
-            this.lblGpa = new System.Windows.Forms.Label();
-            this.txtGpa = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnChangePassword = new System.Windows.Forms.Button();
 
@@ -47,24 +43,32 @@
             this.lblTitle.Location = new System.Drawing.Point(20, 15);
             this.lblTitle.Text = "My Profile";
 
-            this.lblName.AutoSize = true; this.lblName.Location = new System.Drawing.Point(lx, y + 4); this.lblName.Text = "Full Name";
-            this.txtName.Location = new System.Drawing.Point(ix, y); this.txtName.Size = new System.Drawing.Size(w, 28);
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(lx, y + 4);
+            this.lblName.Text = "Full Name";
+            this.txtName.Location = new System.Drawing.Point(ix, y);
+            this.txtName.Size = new System.Drawing.Size(w, 28);
             y += gap;
 
-            this.lblEmail.AutoSize = true; this.lblEmail.Location = new System.Drawing.Point(lx, y + 4); this.lblEmail.Text = "Email";
-            this.txtEmail.Location = new System.Drawing.Point(ix, y); this.txtEmail.Size = new System.Drawing.Size(w, 28);
+            this.lblEmail.AutoSize = true;
+            this.lblEmail.Location = new System.Drawing.Point(lx, y + 4);
+            this.lblEmail.Text = "Email";
+            this.txtEmail.Location = new System.Drawing.Point(ix, y);
+            this.txtEmail.Size = new System.Drawing.Size(w, 28);
             y += gap;
 
-            this.lblCourse.AutoSize = true; this.lblCourse.Location = new System.Drawing.Point(lx, y + 4); this.lblCourse.Text = "Course";
-            this.txtCourse.Location = new System.Drawing.Point(ix, y); this.txtCourse.Size = new System.Drawing.Size(w, 28);
+            this.lblCourse.AutoSize = true;
+            this.lblCourse.Location = new System.Drawing.Point(lx, y + 4);
+            this.lblCourse.Text = "Course";
+            this.txtCourse.Location = new System.Drawing.Point(ix, y);
+            this.txtCourse.Size = new System.Drawing.Size(w, 28);
             y += gap;
 
-            this.lblYear.AutoSize = true; this.lblYear.Location = new System.Drawing.Point(lx, y + 4); this.lblYear.Text = "Year Level";
-            this.txtYear.Location = new System.Drawing.Point(ix, y); this.txtYear.Size = new System.Drawing.Size(w, 28);
-            y += gap;
-
-            this.lblGpa.AutoSize = true; this.lblGpa.Location = new System.Drawing.Point(lx, y + 4); this.lblGpa.Text = "GPA";
-            this.txtGpa.Location = new System.Drawing.Point(ix, y); this.txtGpa.Size = new System.Drawing.Size(w, 28);
+            this.lblYear.AutoSize = true;
+            this.lblYear.Location = new System.Drawing.Point(lx, y + 4);
+            this.lblYear.Text = "Year Level";
+            this.txtYear.Location = new System.Drawing.Point(ix, y);
+            this.txtYear.Size = new System.Drawing.Size(w, 28);
             y += gap;
 
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(0, 120, 215);
@@ -96,7 +100,6 @@
             this.Controls.Add(this.lblEmail); this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.lblCourse); this.Controls.Add(this.txtCourse);
             this.Controls.Add(this.lblYear); this.Controls.Add(this.txtYear);
-            this.Controls.Add(this.lblGpa); this.Controls.Add(this.txtGpa);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnChangePassword);
         }

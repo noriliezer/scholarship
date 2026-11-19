@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using scholarship;
 
-namespace scholarship
+namespace ScholarshipApp
 {
     public partial class StudentMessagesPage : Form
     {
@@ -14,30 +15,39 @@ namespace scholarship
         private void LoadMessages()
         {
             lstMessages.Items.Clear();
-            foreach (var m in Db.GetMessagesByStudent(Session.StudentId))
-                lstMessages.Items.Add(new MessageItem(m));
+            try
+            {
+                foreach (var m in Db.GetMessagesByStudent(Session.StudentId))
+                    lstMessages.Items.Add(new MessageItem(m));
+            }
+            catch (Exception ex)
+            {
+                Ui.Error("Could not load messages: " + ex.Message);
+            }
         }
 
         private void btnMarkAll_Click(object sender, EventArgs e)
         {
-            Db.MarkAllMessagesRead(Session.StudentId);
-            LoadMessages();
+            try { Db.MarkAllMessagesRead(Session.StudentId); LoadMessages(); }
+            catch (Exception ex) { Ui.Error(ex.Message); }
         }
 
         private void lstMessages_DoubleClick(object sender, EventArgs e)
         {
-            if (lstMessages.SelectedItem is MessageItem item)
+            if (lstMessages.SelectedItem is not MessageItem item) return;
+            try
             {
                 Db.MarkMessageRead(item.Message.MessageId);
-                Ui.ShowInfo($"{item.Message.Title}\n\n{item.Message.Body}");
+                Ui.Info($"{item.Message.Title}\n\n{item.Message.Body}");
                 LoadMessages();
             }
+            catch (Exception ex) { Ui.Error(ex.Message); }
         }
 
         private class MessageItem
         {
-            public Message Message { get; }
-            public MessageItem(Message m) { Message = m; }
+            public StudentMessage Message { get; }
+            public MessageItem(StudentMessage m) { Message = m; }
             public override string ToString() =>
                 $"{(Message.IsRead ? "○" : "●")}  [{Message.CreatedAt:yyyy-MM-dd}]  {Message.Title}";
         }
