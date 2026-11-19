@@ -1,8 +1,16 @@
-﻿namespace ScholarshipApp
+﻿namespace scholarship
 {
-    public static class Session
+    public static partial class Session
     {
-        public static int AdminId { get; set; }
-        public static string Username { get; set; } = "";
+        public static int StudentId { get; set; }
+        public static string Role { get; set; }     // "Admin" | "Student"
+        public static string FullName { get; set; }
+
+        public static void Clear()
+        {
+            StudentId = 0;
+            Role = null;
+            FullName = null;
+        }
     }
 }
