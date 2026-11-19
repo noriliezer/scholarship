@@ -1,4 +1,6 @@
-﻿namespace ScholarshipApp
+﻿using Microsoft.Data.SqlClient;
+
+namespace ScholarshipApp
 {
     public partial class SettingsPage : UserControl
     {
@@ -47,7 +49,7 @@
                     ("@h", BCrypt.Net.BCrypt.HashPassword(txtNewPassword.Text)),
                     ("@id", Session.AdminId));
             }
-            catch (Microsoft.Data.SqlClient.SqlException ex)
+            catch (SqlException ex)
             {
                 MessageBox.Show(Db.Friendly(ex), "Settings");
                 return;
@@ -61,7 +63,10 @@
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            LogoutRequested?.Invoke(this, EventArgs.Empty);
+            if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                LogoutRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }

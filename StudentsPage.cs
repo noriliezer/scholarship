@@ -132,14 +132,22 @@ namespace ScholarshipApp
                 return;
             }
             string id = Cell(dgvStudents.CurrentRow, 0);
-            if (MessageBox.Show($"Delete student {id}?", "Students", MessageBoxButtons.YesNo) != DialogResult.Yes)
+
+            // 1. Warn the user that their applications will also be deleted
+            if (MessageBox.Show($"Are you sure you want to delete student {id}?\n\nThis will also permanently delete all of their scholarship applications.",
+                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
 
             try
             {
+                // 2. Delete their applications FIRST (to satisfy the database foreign key)
+                Db.Execute("DELETE FROM applications WHERE student_id = @id", ("@id", id));
+
+                // 3. Then delete the student
                 Db.Execute("DELETE FROM students WHERE student_id = @id", ("@id", id));
+
                 LoadData();
             }
             catch (SqlException ex)

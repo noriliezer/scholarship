@@ -4,7 +4,6 @@ namespace ScholarshipApp
 {
     public partial class DashboardForm : Form
     {
-        private const int SidebarWidth = 260;
         private const int NavWidth = 220;
         private const int Pad = 16;
         private const int Gap = 12;
@@ -114,21 +113,29 @@ namespace ScholarshipApp
             {
                 Panel header = null;
                 DataGridView grid = null;
+                DataGridView historyGrid = null;
                 TextBox messageBox = null;
                 Button sendButton = null;
                 Control comboBox = null;
                 Control subjectTextBox = null;
                 Label lblSubject = null;
+                Label lblRecipients = null;
+                Label lblMessage = null;
+                Label lblHistory = null;
 
                 foreach (Control c in page.Controls)
                 {
                     if (c is Panel p && p.Name == "pnlHeader") header = p;
-                    else if (c is DataGridView g) grid = g;
-                    else if (c is Button b && b.Text == "Send") sendButton = b;
-                    else if (c is TextBox tb && tb.Multiline) messageBox = tb;
-                    else if (c is ComboBox cb) comboBox = cb;
-                    else if (c is TextBox sb && !sb.Multiline) subjectTextBox = sb;
-                    else if (c is Label lbl && lbl.Text == "Subject") lblSubject = lbl;
+                    else if (c.Name == "dgvStudents" || c.Name == "dgvApplications" || c.Name == "dgvScholarships") grid = (DataGridView)c;
+                    else if (c.Name == "dgvHistory") historyGrid = (DataGridView)c;
+                    else if (c.Name == "btnSend") sendButton = (Button)c;
+                    else if (c.Name == "txtMessage") messageBox = (TextBox)c;
+                    else if (c.Name == "cmbRecipients") comboBox = (ComboBox)c;
+                    else if (c.Name == "txtSubject") subjectTextBox = (TextBox)c;
+                    else if (c.Name == "lblSubject") lblSubject = (Label)c;
+                    else if (c.Name == "lblRecipients") lblRecipients = (Label)c;
+                    else if (c.Name == "lblMessage") lblMessage = (Label)c;
+                    else if (c.Name == "lblHistory") lblHistory = (Label)c;
                 }
 
                 if (header == null) continue;
@@ -139,7 +146,7 @@ namespace ScholarshipApp
                 int w = page.ClientSize.Width - 24;
                 int h = page.ClientSize.Height;
 
-                if (grid != null) // Table pages
+                if (grid != null)
                 {
                     foreach (Control c in page.Controls)
                         if (c is Button btn) btn.Top = 68;
@@ -151,48 +158,43 @@ namespace ScholarshipApp
                     grid.Height = Math.Max(100, h - gridTop - 12);
                     grid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                 }
-                else if (sendButton != null && comboBox != null && subjectTextBox != null) // Communications Page
+                else if (sendButton != null && comboBox != null && subjectTextBox != null)
                 {
-                    // Split the width in half (minus padding/gap)
                     int halfWidth = (w - Gap) / 2;
 
-                    // 1. Recipients (Left Side)
+                    if (lblRecipients != null) { lblRecipients.Left = 12; lblRecipients.Top = 68; }
                     comboBox.Left = 12;
-                    comboBox.Top = 102;
+                    comboBox.Top = 92;
                     comboBox.Width = halfWidth;
 
-                    foreach (Control c in page.Controls)
-                        if (c is Label l && l.Text == "Recipients") { l.Left = 12; l.Top = 68; }
-
-                    // 2. Subject (Right Side)
                     int rightX = 12 + halfWidth + Gap;
                     if (lblSubject != null) { lblSubject.Left = rightX; lblSubject.Top = 68; }
-
                     subjectTextBox.Left = rightX;
-                    subjectTextBox.Top = 102;
+                    subjectTextBox.Top = 92;
                     subjectTextBox.Width = halfWidth;
 
-                    // 3. Message Box (Full width below them)
+                    if (lblMessage != null) { lblMessage.Left = 12; lblMessage.Top = 136; }
                     if (messageBox != null)
                     {
                         messageBox.Left = 12;
-                        messageBox.Top = 190; // pushed down to accommodate the new 2-column row
+                        messageBox.Top = 160;
                         messageBox.Width = w;
+                        messageBox.Height = 100;
                     }
 
-                    // 4. Send Button (Bottom Right)
-                    sendButton.Top = h - 70;
+                    sendButton.Top = 270;
                     sendButton.Left = w + 12 - sendButton.Width;
-                    sendButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+                    sendButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-                    if (messageBox != null)
+                    if (lblHistory != null) { lblHistory.Left = 12; lblHistory.Top = 320; }
+                    if (historyGrid != null)
                     {
-                        messageBox.Height = Math.Max(100, sendButton.Top - messageBox.Top - 20);
-                        messageBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                        historyGrid.Left = 12;
+                        historyGrid.Top = 344;
+                        historyGrid.Width = w;
+                        historyGrid.Height = Math.Max(100, h - 344 - 12);
+                        historyGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                     }
-
-                    foreach (Control c in page.Controls)
-                        if (c is Label l && l.Text == "Message") { l.Left = 12; l.Top = 156; }
                 }
             }
         }
@@ -276,6 +278,8 @@ namespace ScholarshipApp
 
         private void Logout()
         {
+            Session.AdminId = 0;
+            Session.Username = "";
             new LandingForm().Show();
             Close();
         }

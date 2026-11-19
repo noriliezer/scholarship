@@ -42,5 +42,11 @@ namespace ScholarshipApp
 
             Ui.Open(this, new DashboardForm());
         }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            // Go back to Landing Form
+            Ui.Open(this, new LandingForm());
+        }
     }
 }

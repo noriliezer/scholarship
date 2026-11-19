@@ -31,8 +31,32 @@ namespace ScholarshipApp
 
         public static void LoadLogo(PictureBox pic)
         {
-            string path = Path.Combine(AppContext.BaseDirectory, "logo.png");
-            if (File.Exists(path)) pic.Image = Image.FromFile(path);
+            try
+            {
+                Assembly asm = Assembly.GetExecutingAssembly();
+
+                // 1. Look for it inside the Database folder
+                using Stream stream = asm.GetManifestResourceStream("scholarship.Database.logoSchool.jpg");
+
+                if (stream != null)
+                {
+                    pic.Image = Image.FromStream(stream);
+                    pic.SizeMode = PictureBoxSizeMode.Zoom;
+                    return;
+                }
+
+                // 2. Fallback: Look for it in the root folder (in case you move it later)
+                using Stream fallbackStream = asm.GetManifestResourceStream("scholarship.logoSchool.jpg");
+                if (fallbackStream != null)
+                {
+                    pic.Image = Image.FromStream(fallbackStream);
+                    pic.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+            }
+            catch
+            {
+                // Fails silently
+            }
         }
     }
 }
